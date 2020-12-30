@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
+from torch.utils.data import Dataset
+import torch
+import io
+import sys
 
 
 
@@ -37,14 +40,6 @@ DATADIR = './data/sign_data/'
 train_file = pd.read_csv(DATADIR + 'train_data.csv', names=['sample_a', 'sample_b', 'target'])
 test_file = pd.read_csv(DATADIR + 'test_data.csv', names=['sample_a', 'sample_b', 'target'])
 
-def extract(data):
-    data[['a_id', 'a_img']] = data['sample_a'].str.split('/').to_list()
-    data[['b_id', 'b_img']] = data['sample_b'].str.split('/').to_list()
-    data['forged'] = data['b_id'].str.contains('forg')
-    return data
-
-train_file = extract(train_file)
-test_file = extract(test_file)
 
 
 
@@ -58,6 +53,7 @@ def show_pic(path, train=True):
     img = plt.imread(path)
     plt.imshow(img)
     plt.show()
+
 
 def compare_pic(number):
     folder = DATADIR + 'train/'
@@ -82,7 +78,7 @@ def compare_pic(number):
         title += 'Signatures: Match\n'
 
     else:
-        title += 'Signatures: No Macht\n'
+        title += 'Signatures: No Match\n'
 
     if forgery:
         title += 'Signature: Forged'
@@ -94,34 +90,34 @@ def compare_pic(number):
 
     ax = fig.add_subplot(1, 2, 1)
     img = plt.imshow(img_a)
-    plt.title(f'ID: {train_file.iloc[number]["a_id"]}\n'
+    plt.title(f'ID: {a_id}\n'
               f'IMG: {train_file.iloc[number]["a_img"]}')
     ax = fig.add_subplot(1, 2, 2)
     img = plt.imshow(img_b)
-    plt.title(f'ID: {train_file.iloc[number]["b_id"]}\n'
+    plt.title(f'ID: {b_id}\n'
           f'IMG: {train_file.iloc[number]["b_img"]}')
-
-
     plt.show()
+
+
 
 # TODO: Add Forgery description to plot
 # TODO: Find out how many pictures are matched
 # TODO: Find out how many signatures are from same person but target is 0
 # TODO: Person identifier in compare pic wrong
 
-
+"""
 subset = train_file.sample(5).copy()
 sample_row = subset.values[0]
-
+"""
 
 def forgery_checker(row):
     # Check spellings
     # Check same
     if row[0] == row[1]:
         return 1
-
     else:
         return 0
 
+"""
 checked = train_file.apply(forgery_checker, axis=1)
-
+"""
