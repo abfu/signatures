@@ -23,4 +23,3 @@ def installed():
 def test_requirements_up_to_date(recorded, installed):
     for r, i in zip(recorded, installed):
         assert r == i, f'Requirement: {r} should match installed: {i}'
-
