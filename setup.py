@@ -9,5 +9,6 @@ setuptools.setup(
                       'pandas',
                       'numpy',
                       'notebook',
-                      'scikit-image']
+                      'scikit-image',
+                      'pytest']
 )
