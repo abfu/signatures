@@ -217,6 +217,8 @@ wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
     # via bleach
+yapf==0.30.0
+    # via sig (setup.py)
 zipp==3.4.0
     # via importlib-metadata
 

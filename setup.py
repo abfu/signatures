@@ -10,5 +10,6 @@ setuptools.setup(
                       'numpy',
                       'notebook',
                       'scikit-image',
-                      'pytest']
+                      'pytest',
+                      'yapf']
 )

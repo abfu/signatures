@@ -16,7 +16,7 @@ def recorded():
 def installed():
     pip_freeze = subprocess.check_output('pip freeze', shell=True)
     installed = pip_freeze.decode().split('\n')[:-1]
-    installed = [s.lower() for s in installed if not s.startswith('pip-tools')]
+    installed = [s.lower() for s in installed if not s.startswith(('pip-tools', 'click'))]
     return sorted(installed, key=str.lower)
 
 
