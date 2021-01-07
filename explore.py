@@ -90,8 +90,6 @@ def compare_pic(number):
     a_id = train_file.iloc[number]['a_id']
     b_id = train_file.iloc[number]['b_id']
 
-
-
     fig = plt.figure()
 
     title = ''
