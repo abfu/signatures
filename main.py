@@ -20,6 +20,8 @@ import argparse
 DATADIR = './data/sign_data/'
 
 rescale = Rescale((100, 100))
+
+# TODO Speed up data loader & add cuda support
 train_set = SignatureDataset(root='./data/sign_data/',
                              split='train',
                              transforms=transforms.Compose([rescale,
@@ -29,14 +31,18 @@ test_set = SignatureDataset(root='./data/sign_Data/',
                             transforms=transforms.Compose([rescale,
                                                            ToTensor()]))
 
-train_loader = DataLoader(train_set, batch_size=50, shuffle=True)
-
-test_loader = DataLoader(test_set, batch_size=50, shuffle=False)
 
 
 if __name__ == '__main__':
     # TODO: Add argparser
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    batch_size = 150
+    num_workers = 8  # Set number of workers for prefetching of data
+
+
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     num_epochs = 1
     total_step = len(train_loader)
@@ -81,3 +87,5 @@ if __name__ == '__main__':
             total += labels.size(0)
             correct += (predicted == labels.reshape(-1)).sum().item()
         print('Test Accuracy of the model on the 10000 test images: {} %'.format(100 * correct / total))
+
+    torch.save(model.state_dict(), 'model_sig.ckpt')
