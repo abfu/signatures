@@ -6,14 +6,9 @@ Afterwards add forgery detection to network.
 """
 import torch
 import torch.nn as nn
-import torchvision.datasets as dataset
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
-from skimage import io, transform
-import pandas as pd
-from explore import extract, compare_pic
 from utils import SignatureDataset, Rescale, ToTensor
-import matplotlib.pyplot as plt
 from model import SigNet
 import argparse
 
@@ -52,21 +47,20 @@ if __name__ == '__main__':
     # Make sure the first conv layer can process double tensors
     model.double()
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Train
     for epoch in range(num_epochs):
         for i_batch, sample_batched in enumerate(train_loader):
             # Forward Pass
             data = (sample_batched['img_a'].to(device), sample_batched['img_b'].to(device))
-            outputs = model(data)
+            outputs = model(datat)
 
+            optimizer.zero_grad()
             loss = criterion(outputs, sample_batched['is_match'].reshape(-1))
             loss.backward()
             optimizer.step()
 
-            # Backprop
-            optimizer.zero_grad()
 
             if (i_batch + 1) % 10 == 0:
                 print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i_batch+1}/{total_step}], Loss: {loss.item():.4f}')
@@ -86,6 +80,6 @@ if __name__ == '__main__':
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels.reshape(-1)).sum().item()
-        print('Test Accuracy of the model on the 10000 test images: {} %'.format(100 * correct / total))
+        print(f'Test accuracy of the model on {total} test images: {100 * correct / total}')
 
     torch.save(model.state_dict(), 'model_sig.ckpt')

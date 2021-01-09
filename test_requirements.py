@@ -4,7 +4,7 @@ import subprocess
 
 
 req = [line.strip() for line in open('requirements.txt') if not line.strip().startswith('#') and len(line.strip()) > 0]
-
+exclude = ('pip-tools', 'click', 'sphinx')
 
 @pytest.fixture
 def recorded():
@@ -16,7 +16,7 @@ def recorded():
 def installed():
     pip_freeze = subprocess.check_output('pip freeze', shell=True)
     installed = pip_freeze.decode().split('\n')[:-1]
-    installed = [s.lower() for s in installed if not s.startswith(('pip-tools', 'click'))]
+    installed = [s.lower() for s in installed if not s.startswith(exclude)]
     return sorted(installed, key=str.lower)
 
 
